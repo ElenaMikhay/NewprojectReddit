@@ -1,6 +1,4 @@
 import requests
-import requests.auth as auth
-import json
 
 class RedditTests:
     def __init__(self, login, password):
@@ -8,33 +6,30 @@ class RedditTests:
         self._login = login
         self._password = password
 
-    def open_reddit(self):
+    def check_availability_reddit(self):
         """Открытие сайта Reddit"""
 
         resp = requests.get(self._url)
         resp.raise_for_status()
+        if resp.status_code == 200:
+            return resp.status_code
 
-        print(f"status: {resp.status_code}")
-
-
-if __name__ == '__main__':
-    rt = RedditTests("TestForJob", "!qaz2wsx")
-    rt.open_reddit()
-
-    def authtorization(self):
+    def auth(self):
         """Аутентификация на сайте"""
 
-        client_auth = requests.auth.HTTPBasicAuth('INSERT AUTH', 'INSERT AUTH')
-        post_data = {"grant_type": "password", "username": "bakebreadsmellroses", "password": "INSERT PASS"}
-        headers = {"User-Agent": "ChangeMeClient/0.1 by YourUsername"}
+        session = requests.session()
+        url = self._url+'login'
+        params = {
+            'csrf_token': 'ac0a1b8d7a4490a9103282269372ae6784fce79d',
+            'otp': '',
+            'password': '!QAZ2wsx',
+            'dest': f'{self._url}',
+            'username': 'TestForJob'
+        }
+        r = session.post(url, params)
+        print(r.text)
 
-        # Make a POST request with information about authorization to get back a json object in response
-        # which contains the auth token
-        response = requests.post("https://www.reddit.com/api/v1/access_token", auth=client_auth, data=post_data,
-                                 headers=headers)
-        response.json()
-
-        #
+               #
         #    # url https://www.reddit.com/login
         #    # POST
         #    # Headers:
@@ -91,3 +86,7 @@ if __name__ == '__main__':
         #    # Headers: authorization: Bearer...из метода authtorization
         #    # content-type:application/x-www-form-urlencoded
         #    #Body:  access_token = 1736311588263 - UbABTB48P2bWPyF6xrphWB7b1sf7Nw ????
+
+if __name__ == '__main__':
+    rt = RedditTests("TestForJob", "!qaz2wsx")
+    rt.auth()
