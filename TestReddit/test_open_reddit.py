@@ -5,10 +5,10 @@ import requests.auth
 class RedditTests:
     def __init__(self, login, password, client_id, client_secret):
         self._url = 'https://reddit.com'
-        self._login = 'TestForJob'
-        self._password = '!QAZ2wsx'
-        self._client_id = 'aITM_HsCi-HNExzJfGdCwQ'
-        self._client_secret = 'PO0n6ijLOLm96CkEAYMCAYNfWi4qVg'
+        self._login = 'login'
+        self._password = 'password'
+        self._client_id = 'client_id'
+        self._client_secret = 'client_secret'
         self._session = requests.session() # инициируем новую сессиию, которая будет у нас использована по всему классу
         self._session.headers.update(**{"User-Agent": "TestForJob/0.0.1"}) # добавляем заголовок User-Agent
 
@@ -18,6 +18,7 @@ class RedditTests:
         resp = requests.get(self._url)
         resp.raise_for_status()
 
+    @property
     def auth(self):
         """Аутентификация на reddit"""
 
@@ -28,8 +29,32 @@ class RedditTests:
         resp_data = resp.json()
         self._session.headers.update(Authorization=f"{resp_data['token_type']} {resp_data['access_token']}")
 
+        return resp.json
+
+    def search_for_a_thread(self):
+        """Поиск треда по ключевому слову"""
+
+        params = {'limit': limit, 'q': subreddit}
+        response = self._session.get(f'={self._url}/search', params=params, expected_codes=expected_code)
+
+        return response.json()
+
+    def add_new_comment_for_thread(self):
+
+        params = {'thing_id': thread_id, 'text': comment}
+        response = self._session.post(url=f'{self._url}/api/comment', params=params, expected_codes=expected_code)
+
+        return response.json()
+
+    def delete_comment_in_thread(self):
+
+        params = {'id': comment_id}
+        response = self._session.post(url=f'{self._url}/api/del', params=params, expexted_codes=expected_code)
+
+        return response.json()
+
 
 if __name__ == '__main__':
-    rt = RedditTests("TestForJob", "!qaz2wsx", "client_id", "client_secret")
+    rt = RedditTests("TestForJob", "!qaz2wsx", "aITM_HsCi-HNExzJfGdCwQ", "PO0n6ijLOLm96CkEAYMCAYNfWi4qVg")
     rt.auth()
 
