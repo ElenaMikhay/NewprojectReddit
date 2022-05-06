@@ -31,6 +31,26 @@ class RedditTests:
     def search_for_a_thread(self):
         """Поиск треда по ключевому слову"""
 
+        params = {'limit': limit, 'q': subreddit}
+        response = self._get(f'url={self._url}/search', params=params, expected_codes=expected_code)
+
+        return response.json()
+
+    def add_new_comment_for_thread(self):
+
+        params = {'thing_id': thread_id, 'text': comment}
+
+        response = self._post(url=f'{self._url}/api/comment', params=params, expected_codes=expected_code)
+
+        return response.json()
+
+    def delete_comment_in_thread(self):
+
+        params = {'id': comment_id}
+        response = self._post(url=f'{self._url}/api/del', params=params,expexted_codes=expected_code)
+
+        return response.json()
+
 
 if __name__ == '__main__':
     rt = RedditTests("TestForJob", "!qaz2wsx", "client_id", "client_secret")
