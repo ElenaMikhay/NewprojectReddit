@@ -29,7 +29,6 @@ class RedditTests:
         self._session.headers.update(Authorization=f"{resp_data['token_type']} {resp_data['access_token']}")
 
 
-
 if __name__ == '__main__':
     rt = RedditTests("TestForJob", "!qaz2wsx", "client_id", "client_secret")
     rt.auth()
