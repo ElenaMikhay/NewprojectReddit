@@ -18,7 +18,7 @@ class RedditTests:
         resp = requests.get(self._url)
         resp.raise_for_status()
 
-    @property
+
     def auth(self):
         """Аутентификация на reddit"""
 
